@@ -14,7 +14,16 @@
 Route::get('/', 'WelcomeController@index');
 
 Route::get('home', 'HomeController@index');
-Route::resource('user','UserController');
+
+Route::resource('profil','User\ProfilController');
+Route::resource('user','User\UserController');
+Route::resource('project','ProjectController');
+Route::resource('backend','BackendController');
+Route::resource('api','ApiController');
+Route::resource('file','FileController');
+Route::resource('oauth','OauthController');
+Route::resource('token','TokenController');
+
 Route::controllers([
 	'auth' => 'Auth\AuthController',
 	'password' => 'Auth\PasswordController',
