@@ -1,0 +1,43 @@
+{
+    "name": "cpnv/meetandcreate",
+    "description": "A website permitting the submit of project and sharing of them between members",
+
+    "license": "GPL",
+    "authors": [
+        {
+            "name": "Thomas Ricci",
+            "email": "thomas.ricci@cpnv.ch"
+        },
+        {
+            "name": "Eric Bousbaa",
+            "email": "eric.bousbaa@cpnv.ch"
+        },
+        {
+            "name": "Guillaume Laubscher",
+            "email": "guillaume.laubscher@cpnv.ch"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "illuminate/database": "~4.2",
+        "phpmailer/phpmailer":"5.2.*",
+        "twig/twig": "v1.16.3",
+        "fzaninotto/faker": "1.5.*@dev",
+        "facebook/php-sdk-v4" : "4.0.*",
+        "google/apiclient": "1.1.1",
+        "nesbot/Carbon": "1.13.0 "
+    },
+    "autoload" : {
+        "classmap":[
+          "app/",
+          "app/models/",
+          "app/interfaces/",
+          "app/classes/"
+        ],
+        
+        "files":[
+            "app/database.php",
+            "app/loger.php"
+        ]
+    }
+}
