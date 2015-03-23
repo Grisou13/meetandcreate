@@ -1,0 +1,103 @@
+{# 
+    Description: Permets d'avoir un formulaire pour modifier ou ajouter un projet
+#}
+
+{% extends "template/main.twig" %}
+{%block title %}Projets{%endblock%}
+{% block head %}
+    <link rel="stylesheet" href="css/bootstrap-datetimepicker.min.css">
+{% endblock %}
+{% block contenu %}
+    <div class="well">
+        <form method="POST">
+            <div class="row">
+                <div class="col-md-12">
+                    <span class='input-group-addon'>Titre du projet</span>
+                    <p><input class="form-control" placeholder="Titre" name="titre" value="{{data.projet.titre is not null?data.projet.titre:''}}"></p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <span class='input-group-addon'>Déscription</span>
+                    <p><textarea class="form-control" rows="3" placeholder="Description" name="description" >{{data.projet.description is not null?data.projet.description:''}}</textarea></p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class='input-group date' id='datedebut'>
+                        <span class='input-group-addon'>Date de début</span>
+                        <input type='text' value="{{data.projet.debut is not null?data.projet.debut|date("d/m/Y"):''}}"  placeholder="Date de fin de début du projet (jour/mois/année)" name="projet_datedebut" class="form-control" />
+                        <span class="input-group-addon datepickerbutton"><span class="glyphicon glyphicon-calendar "></span></span>
+                    </div>
+                </div>
+            </div>  
+            <div class="row">
+                <div class="col-md-12">                    
+                    <div class='input-group date' id='datefin'>
+                        <span class='input-group-addon'>Date de fin</span>
+                        <input type='text' value="{{data.projet.fin is not null?data.projet.fin|date("d/m/Y"):''}}"   placeholder="Date de fin du projet (jour/mois/année)" name="projet_datefin" class="form-control" />
+                        <span class="input-group-addon datepickerbutton"><span class="glyphicon glyphicon-calendar "></span></span>
+                    </div>                    
+                </div>
+            </div>   
+            <div class="row">
+               
+                    <div class="col-md-2 col-md-offset-4">
+                        <label class="radio-inline"><input {{(data.projet.publier is not null and data.projet.publier=='1') or data.projet.publier is null?'checked':''}} type="radio" name="action" value="publication">Publier</label>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="radio-inline"><input {{data.projet.publier is not null and data.projet.publier=='0'?'checked':''}} type="radio" name="action" value="depublication">Dépublier</label>
+                    </div>
+                
+            </div>
+            <div class="row">
+                
+                    <div class="col-md-1">
+                        <input type="hidden" name="projet_id" value="{{data.projet.id is not null?data.projet.id:''}}">
+                    </div>
+                    <div class="col-md-2 col-md-offset-4">
+                        <input class="btn btn-primary btn-block" type="submit"     name="submit"       value="{{get.action=='modifier'?'modifier':'créer'}}">
+                    </div>
+                
+            </div>
+        </form>
+    </div>
+    
+    
+{% endblock%}
+{% block script %}
+    {{parent()}}
+    <script src="js/moment.js"></script>
+    <script src="js/bootstrap-datetimepicker.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            $('#datedebut').datetimepicker({
+                format:"DD/MM/YYYY",
+                pickTime: false,
+                useCurrent: true, 
+                defaultDate:"{{data.projet.debut|date("d/m/Y")}}",
+                maxDate:"{{data.projet.fin|date("d/m/Y")}}"
+            });
+            $('#datefin').datetimepicker({
+                format:"DD/MM/YYYY",
+                pickTime: false,
+                useCurrent: true,
+                defaultDate:"{{data.projet.fin|date("d/m/Y")}}",
+                minDate:"{{data.projet.debut|date("d/m/Y")}}"
+            });
+            $('#datedebut').on('dp.show',function(){
+                $('#datefin').data("DateTimePicker").hide();
+            });
+            $('#datefin').on('dp.show',function(){
+                $('#datedebut').data("DateTimePicker").hide();
+            });
+            $("#datedebut").on("dp.change",function (e) {                
+               $('#datefin').data("DateTimePicker").setMinDate(e.date);
+            });
+            $("#datefin").on("dp.change",function (e) {
+               $('#datedebut').data("DateTimePicker").setMaxDate(e.date);
+            });
+            
+        });
+    </script>
+{% endblock %}

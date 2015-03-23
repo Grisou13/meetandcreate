@@ -1,0 +1,69 @@
+{#
+ * app/views/profil_favori.twig
+ * Affichage des profils favoris
+ * Auteur : Eric Bousbaa
+#}
+{% extends "template/main.twig" %} {# permet d'utiliser les templates #}
+{%block title %}Profils_Favoris{%endblock%}
+{# Contenu #}
+{% block contenu %}
+
+        <div class="row well well-sm">
+        {% for profil in favori%} {# Pour chaque profil mis en favoris#}
+            
+            <div class="col-xs-12 col-md-12">
+                <form method="post" action="profil.php"> {# Affichage du profil. On désactive la modification du champ si il ne s'agit pas de notre profil#}
+                    <input type="hidden" name="id" value="{{profil.id}}">
+                    <div class="input-group">
+                        <span class="input-group-addon" id="pseudo">Votre pseudonyme</span>
+                        <input type="text" name="pseudo" class="form-control" aria-describedby="pseudo" value="{{profil.username}}" {% if session.userid != profil.id %}disabled {% endif%}/>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon" id="email">Votre email</span>
+                        <input type="text" name="email" class="form-control" aria-describedby="email" value="{{profil.email}}" {% if session.userid != profil.id %}disabled {% endif%}/>
+                    </div> 
+                    <div class="input-group">
+                        <span class="input-group-addon" id="prenom">Votre Prenom</span>
+                        <input type="text" name="prenom" class="form-control" aria-describedby="prenom" value="{{profil.prenom}}" {% if session.userid != profil.id %}disabled {% endif%}/>
+                    </div> 
+                    <div class="input-group">
+                        <span class="input-group-addon" id="nom">Votre Nom</span>
+                        <input type="text" name="nom" class="form-control" aria-describedby="nom" value="{{profil.nom}}" {% if session.userid != profil.id %}disabled {% endif%}/>
+                    </div> 
+                    <div class="input-group">
+                        <span class="input-group-addon" id="description">Description</span>
+                        <textarea class="form-control" aria-describedby="description" name="description" placeholder="description" rows="4" style="max-width: 100%; min-width: 100%; min-height: 34px;" {% if session.userid != profil.id %}disabled {% endif%}>{{profil.description}}</textarea> 
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon" id="pays">Pays</span>
+                        <input type="text" name="pays" class="form-control" aria-describedby="pays" value="{{profil.pays}}" {% if session.userid != profil.id %}disabled {% endif%}/>
+                    </div> 
+
+                    
+                </form>
+                {% if session.userid!=profil.id %} {# #}                  
+                    <a href='profil.php?id={{profil.id}}' ><button class='btn btn-primary'>Voir le profil</button></a>
+                {%endif %}
+
+                {%if this is not null and this.id != profil.id and this.isProfilFavori(profil.id)%}{# Affiche le formulaire ajouter/enlever favoris #}
+                    <form action='profil.php' method='post'>
+                        <input type='hidden' name='favori_id' value='{{profil.id}}' >
+                        <input type='hidden' name='action' value='enlever' >
+                        <input value='Enlever favori' name='submit' type='submit' class='btn btn-danger'>
+                    </form>
+                {% elseif this is not null and this.id!=profil.id and not this.isProfilFavori(profil.id)%}
+                    <form action='profil.php' method='post'>
+                        <input type='hidden' name='favori_id' value='{{profil.id}}' >
+                        <input type='hidden' name='action' value='ajouter' >
+                        <input value='Ajouter favori' name='submit' type='submit' class='btn btn-primary'>
+                    </form>
+                {%endif%}
+
+        </div>                  
+        </div>            
+    <div class="row well well-sm">
+    {% else %}
+        <p> Vous n'avez aucun Favori </p>
+    {%endfor %}
+    </div>
+{% endblock %}

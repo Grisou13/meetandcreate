@@ -1,0 +1,24 @@
+{# 
+    Description: Affiche tout les projets qui sont créés
+#}
+
+{% extends "template/main.twig" %}
+
+{% block title %}Tous les projets{% endblock %}
+{% block contenu %}
+    {%if session.userid is null and this is null%}
+        <div class='well well-sm'>
+            <p>Vous êtes actuellement déconnecté, vous pouvez donc voir que les projets publics.</p>
+            <p>Pour voir tous les projets, il faut vous connectez (<a href='connexion.php'>ici</a>),<br/>
+                Ou vous créez un compte (<a href='inscription.php'>ici</a>)
+            </p>
+        </div>
+    {%endif%}
+    {%for projet in projets%}
+        {% include 'include/projet.twig' %}
+    {%endfor%}
+{%endblock%}
+{%block script %}
+    {{parent()}}
+    <script src="js/projet.js"></script>
+{%endblock%}

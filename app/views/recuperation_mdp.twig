@@ -1,0 +1,21 @@
+{#
+ * app/views/recuperation_mdp.twig
+ * Affichage du formulaire de récupération de mot de passe
+ * Auteur : Eric Bousbaa
+#}
+{% extends "template/main.twig" %} {# permet d'utiliser les templates #}
+{%block title %}Récuperation de mot de passe{%endblock%}
+{# Contenu #} 
+{% block contenu %}
+<form method="post"> {# Formulaire de récupération de mot de passe#}
+    <div class="row">
+        <div class="col-xs-12 col-md-offset-3 col-md-8">
+            <div class="input-group">
+                <span class="input-group-addon" id="email_recup">Votre email</span>
+                <input type="text" name="email_recup" class="form-control" aria-describedby="email_recup"/>
+            </div>
+            <input class="btn btn-primary" type="submit" value="Recevoir un nouveau mot de passe provisoire">
+        </div>
+    </div>   
+</form>   
+{% endblock %}

@@ -1,0 +1,13 @@
+{# 
+    Description: Affiche les projets
+#}
+
+{% extends "template/main.twig" %}
+{%block title %}Projets{%endblock%}
+{% block contenu %}
+    {% include 'include/projet.twig' %}
+{% endblock%}
+{%block script %}
+    {{parent()}}
+    <script src="js/projet.js"></script>
+{%endblock%}

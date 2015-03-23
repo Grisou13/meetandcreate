@@ -1,0 +1,48 @@
+/* 
+ * public_html/css/global.php
+ * Descipriton : fichier de style pour tous les élément de recherche a traver toute les pages
+ * @author Thomas Ricci
+ */
+
+#main-recherche{ /*crée une transition quand nous choisisons le champ de rehcerhce principale, reprit de:http://stackoverflow.com/questions/19832878/bootstrap-and-search-input-width-change-on-focus*/
+    width: 300px;
+    -webkit-transition: width 1s ease-in-out;
+    -moz-transition:width 1s ease-in-out;
+    -o-transition: width 1s ease-in-out;
+    transition: width 1s ease-in-out;
+   float:left;
+}
+
+#main-recherche:focus{
+    width: 400px;
+}
+.empty-message {
+    padding: 5px 10px;
+    text-align: center;
+}
+.tt-input .bootstrap-tagsinput{
+    width:100%;
+}
+.filtre-header {
+    width:98%;
+    margin: 0 20px 5px 20px;
+    padding: 5px 0px;
+    border-bottom: 1px solid #ccc;
+}
+.tt-dropdown-menu{
+    background-color: #fff;
+    width:98%;
+    border:1px solid #bbb;
+    padding:0;
+}
+.tt-suggestion{
+    margin:0;
+    padding:0 10px;
+    margin:0;
+    cursor: pointer;
+}
+
+.tt-hint{
+    /*color:#bbb;*/
+    color:#337ab7;
+}

@@ -1,0 +1,24 @@
+{# 
+    Description: Affiche les projets que l'utilisateur a ajouté dans ces favoris
+#}
+
+{% extends "template/main.twig" %}
+
+{%block title %}Profils_Favoris{%endblock%}
+
+{% block contenu %}
+    {%for projet in favoris%}
+        {# Tous les projet favoris de la personne #}
+
+         {% include 'include/projet.twig' %}
+     {% else %}
+         <div class="well">
+             <h2>Vous n'avez aucun projet favoris.</h2>
+             <h3>Allez visiter les projets <a href='afficher.php?action=projet'>ici</a> pour vous faire une idée.</h3>
+         </div>
+    {%endfor%}
+{% endblock %}
+{%block script %}
+    {{parent()}}
+    <script src="js/projet.js"></script>
+{%endblock%}

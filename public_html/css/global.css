@@ -1,0 +1,21 @@
+/* 
+ * public_html/css/global.php
+ * Descipriton : fichier de style global accessible sur toute les pages
+ * @author Thomas Ricci
+ */
+
+#top-link-block.affix-top {
+    position: absolute; /* allows it to "slide" up into view */
+    bottom: -82px; /* negative of the offset - height of link element */
+    left: -300px; /* padding from the left side of the window */
+}
+#top-link-block.affix {
+    position: fixed; /* keeps it on the bottom once in view */
+    bottom: 18px; /* height of link element */
+    left: 10px; /* padding from the left side of the window */
+}
+
+.carousel-inner > .item > img { margin: 0 auto; }
+.content{
+    background-color: #ccc;
+}

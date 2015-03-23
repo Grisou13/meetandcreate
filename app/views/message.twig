@@ -1,0 +1,34 @@
+{# 
+    Description: Affiche les messages qu'à reçus l'utilisateur
+#}
+
+{% extends "template/main.twig" %}
+{% block contenu %}
+    <div class="row">
+        <div class="col-md-7">
+            {%for message in messages%}
+                <div class='well'>
+                    <h3><a target="_blank" href='profil.php?id={{message.profil_source|url_encode()}}'>{{message.source.username}}</a></h3>
+                    <p>{{message.titre|title}}</p>
+                    <p>{{message.text}}</p> 
+               </div>
+            {%else%}
+                <p>Vous n'avez aucun message!</p>
+            {%endfor%}
+        </div>
+        <div class="col-md-5">
+            <form method='POST'>
+                <input class='form-control' name='titre' placeholder='titre'>
+                <input class='form-control' name='message' placeholder='corps de message'>
+                <select multiple name='profil_id[]' class='suggestion-recherche' placeholder='Rechercher un profil'>
+                </select>
+                <input type='submit' class='btn btn-default'>
+            </form>
+        </div>
+    </div>
+    
+{% endblock %}
+{% block script %}
+    {{parent()}}
+    <script src="js/message.js"></script>
+{% endblock %}

@@ -1,0 +1,133 @@
+{# 
+    Description: Permets d'effectuer des recherches de profils ou de projets
+#}
+
+{% extends 'template/main.twig' %}
+{%block title %}Recherche{%endblock%}
+
+{% block contenu %}
+    <!--<script>
+        $(document).ready(function(){
+            $(".test").popover();
+        });
+    </script>
+    <a id="tooltip" href="#" tabindex="0" class="btn btn-lg btn-danger test" role="button" data-toggle="popover" data-trigger="hover" title="Dismissible popover" data-content="And here's some amazing content. It's very engaging. Right?">Dismissible popover</a>
+     -->       
+        
+    <form action="recherche.php">
+        <div class="row">    
+            <div class="col-md-6">
+                <input type="text" name="q" id="recherche" placeholder="recherche" value="{{data.query is not null?data.query:''}}" class="form-control">
+            </div>
+            <div class="col-md-6">
+                <input type="submit" class="btn btn-primary btn-lg btn-block" value="Rechercher!">
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-md-6">
+                <select type="text" name="competence[]" id="filtrecompetence" placeholder="Filtrer les compétences des profiles" multiple></select>
+            </div>
+            <div class="col-md-6">
+                <select type="text" name="tag[]" id="filtretag" placeholder="Filtrer les tags des projets" multiple></select>
+            </div>
+        </div>
+        
+    </form>
+
+    <!-- Tab panes selector -->
+    <div role="tabpanel">
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active"><a href="#all" aria-controls="all" role="tab" data-toggle="tab">Tout</a></li>
+            <li role="presentation" class=""><a href="#profil" aria-controls="profil" role="tab" data-toggle="tab">Profil</a></li>
+            <li role="presentation" class=""><a href="#projet" aria-controls="projet" role="tab" data-toggle="tab">Projet</a></li>
+        </ul>
+
+      <!-- Tab panes -->
+      <div class="tab-content">
+        {# Toute les données en cas de query général #}
+        <div role="tabpanel" class="tab-pane active" id="all">
+                <div class="row">
+                    <div class="col-md-6 col-xs-12">                    
+                        {% for profile in data.profiles %}
+                            <p><a href="profil.php?id={{profile.id}}" >{{ profile.username }}</a> <br/>                                
+                                {% for comp in profile.competences %} 
+                                    <button class="btn btn-default btn-xs">{{comp.competence}} </button>
+                                {%endfor%}                                
+                            </p>
+                        {% else %}
+                            <p>Il n'y a aucun profile qui correspond à votre recherche</p>
+                        {%endfor%}                  
+                    </div>
+                    <div class="col-md-6 col-xs-12">                    
+                        {% for projet in data.projets %}
+                            <p class="projet"><a href='projet.php?id={{projet.id}}'><strong>{{ projet.titre|title }}</strong></a> <br> 
+                                {{ projet.description }} <br>
+                                <small>
+                                {% for tag in projet.tags %} 
+                                    {{tag.nom}}  
+                                {%endfor%}
+                                </small>
+                            </p>
+                        {% else %}
+                            Il n'y a aucun projet qui correspond à votre recherche <br/>
+                        {%endfor%}
+                    </div>
+                </div>
+        </div>
+        {# Tout les profil par comptéence #}
+        <div role="tabpanel" class="tab-pane" id="profil">      
+            {# Output data à l'utilisateur #}
+            <div class="row">
+                <div class="col-md-12">
+                    {% for profile in data.profiles %}
+                        <p><a href="profil.php?id={{profile.id}}" >{{ profile.username }}</a> <br/>                                
+                            {% for comp in profile.competences %} 
+                                <button class="btn btn-default btn-xs">{{comp.competence}} </button>
+                            {%endfor%}                                
+                        </p>
+                    {% else %}
+                        <p>Il n'y a aucun profile qui correspond à votre recherche</p>
+                    {%endfor%}    
+                </div>
+            </div>
+        </div>
+        {# Tout les projets par tag #}
+        <div role="tabpanel" class="tab-pane" id="projet">
+            {# Output data à l'utilisateur #}
+            <div class="row">                
+                <div class="col-md-12">
+                    {% for projet in data.projets %}
+                        <p class="projet"><a href='projet.php?id={{projet.id}}'><strong>{{ projet.titre|title }}</strong></a> <br> 
+                            {{ projet.description }} <br>
+                            <small>
+                            {% for tag in projet.tags %} 
+                                {{tag.nom}}  
+                            {%endfor%}
+                            </small>
+                        </p>
+                    {% else %}
+                        Il n'y a aucun projet qui correspond à votre recherche <br/>
+                    {%endfor%}
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+{% endblock %}
+{%block script %}
+    {{parent()}}
+    <script src="js/recherche-avance.js"></script>
+    {# reremplit les différents filtres #}
+    <script>
+        $(document).ready(function(){
+            {% for tag in data.filtre.tags %}                
+                $("#filtretag").tagsinput('add', { "id": {{ tag.id }} , "nom": "{{ tag.nom }}"   });
+            {% endfor %}
+
+            {% for comp in data.filtre.competences %}
+                $("#filtrecompetence").tagsinput('add', { "id": {{ comp.id }} , "competence": "{{ comp.competence }}"   });
+            {% endfor %}
+        });
+    </script>
+{%endblock%}

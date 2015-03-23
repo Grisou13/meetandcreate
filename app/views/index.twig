@@ -1,0 +1,68 @@
+{# 
+    Description: Affiche la page d'acceuil avec une liste des projets dans un slideshow
+#}
+
+{% extends "template/main.twig" %}
+
+{% block title %}Acceuil{% endblock %}
+{% block contenu %}
+    <div class="row">
+        <div class="col-md-12">
+            {# carousel avec les projets #}
+            {% if projets is not empty %}
+            <div id="carousel-projets" class="carousel slide row" data-ride="carousel" data-interval="3000" data-pause="hover">
+                <!-- Indicators -->
+                <ol class="carousel-indicators">
+                    {% for projet in projets%}
+                        <li data-target="#carousel-projets" data-slide-to="{{loop.index0}}" class="{{ (loop.index==1)?'active':''}}"></li>
+                    {% endfor %}
+                </ol>
+                <!-- Wrapper for slides -->
+                <div class="carousel-inner" role="listbox">
+                    {% for projet in projets%}
+                        <div class="item {{ (loop.index==1)?'active':''}}">
+                            <img src="http://lorempixel.com/1800/600/" >
+                            <div class="carousel-caption">
+                                <h3><a href="projet.php?id={{projet.id}}">{{projet.titre}}</a></h3>
+                                <p>{{projet.description|length > 80 ? projet.description|slice(0, 80) ~ '...' : projet.description}}</p>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                <!-- Controls -->
+                <a class="left carousel-control" href="#carousel-projets" role="button" data-slide="prev">
+                    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="right carousel-control" href="#carousel-projets" role="button" data-slide="next">
+                  <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                  <span class="sr-only">Next</span>
+                </a>
+
+            </div>
+            {%endif%}
+        </div>
+        
+    </div>
+    <br>
+    <div class="row">
+        <div class='container'>
+            <div class="col-md-4 col-xs-12 well well-lg" >
+                <p><span class="glyphicon glyphicon-pushpin"> </span>
+                Meet and Create, alias Banane est un site qui a pour but de créer des projets en équipe. En vous inscrivant, vous pourrez participer ou créer des projets !</p>
+            </div>
+            
+            <div class="col-md-4 col-xs-12 well well-lg">
+                <p><span class="glyphicon glyphicon-thumbs-up"> </span>
+                <span class="glyphicon glyphicon-thumbs-up"> </span>
+                <span class="glyphicon glyphicon-thumbs-up"> </span>
+                Nous n'aimons pas beaucoup dormir. C'est pourquoi nous sommes fièrs d'avoir réussi à implémenter toutes les fonctionnalités demandés !</p>
+            </div>        
+            <div class="col-md-4 col-xs-12 well well-lg" >
+                <p><span class="glyphicon glyphicon-pushpin"> </span>
+                    Afin d'acquérir de nouvelles connaissances, nous découvrons et utilisons de nouvelles technologies, tels que laravel, bootstrap, twig ou encore composer.</p>
+            </div>
+        </div>
+        
+    </div>
+{% endblock %}

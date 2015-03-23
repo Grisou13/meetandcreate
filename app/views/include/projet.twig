@@ -1,0 +1,270 @@
+    <div class="well well-lg">
+        <div class="row">
+            <div class="col-md-10">
+                <a target='_blank' href="projet.php?id={{projet.id}}"><h1>{{ projet.titre }} </h1></a>
+            </div>
+            <div class='col-md-2'>
+                {% if this is not null and not this.isMembre(projet.id) and not this.isCandidat(projet.id) and  session.userid != projet.createur_id%}
+                        <form method="POST" action='projet.php'>
+                            <input type="submit"     name="submit"       value="s'inscrire"  class="btn btn-success btn-lg"              >
+                            <input type="hidden"     name="action"       value="inscription"                     >
+                            <input type="hidden"     name="projet_id"    value="{{projet.id}}"                   >
+                        </form>
+                {%endif%}
+                {% if this is not null and this.isMembre(projet.id) and this.id!=projet.createur_id%}
+                    <form method="POST" action='projet.php'>
+                        <input type="hidden"     name="action"       value="quitter_projet">
+                        <input type="hidden"     name="projet_id"     value="{{projet.idprojet}}">
+                        <input type="submit"     name="submit"     value="quitter"      class="btn btn-danger btn-lg">
+                    </form>                                
+                {%endif%}
+                {%if this is not null and this.isProjetFavori(projet.id)%}{# Afficher le formulaire ajouter/enlever favoris #}
+                    <form action='projet.php' method='post'>
+                        <input type='hidden' name='projet_id' value='{{projet.id}}' >
+                        <input type='hidden' name='action' value='suppression_projet_favoris' >
+                        <input value='Enlever favori' name='submit' type='submit' class='btn btn-danger'>
+                    </form>
+                {% elseif this is not null and not this.isProjetFavori(projet.id)%}
+                    <form action='projet.php' method='post'>
+                        <input type='hidden' name='projet_id' value='{{projet.id}}' >
+                        <input type='hidden' name='action' value='ajout_projet_favoris' >
+                        <input value='Ajouter favori' name='submit' type='submit' class='btn btn-primary'>
+                    </form>
+                {%endif%}
+            </div>
+            
+        
+        </div>
+        
+        <div class='row'>
+            <div class='col-xs-12'>
+                Date de debut : {{projet.debut|date("F jS Y")}} 
+            </div>
+            <div class='col-xs-12'>
+                Date de fin : {{projet.fin|date("F jS Y")}} 
+            </div>
+            <div class='col-xs-12'>
+                Statut : {{projet.publier?'publier':'non-public'}} 
+            </div>
+        </div>
+        <hr style="border:0; width:100%; color:#000; background-color: #000; height:2px;"/>
+        <div class='row'>
+            <div class="container">
+                <div class="row">
+                    <div class='col-xs-12'>
+                        Crée par : <a href="profil.php?id={{projet.createur.id}}">{{projet.createur.username}}</a>
+
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12 col-md-offset-1">
+                        <p>{{projet.createur.description}}</p>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+        <hr style="border:0; width:100%; color:#000; background-color: #000; height:2px;"/>
+        <div class="row">
+            <div class="col-xs-12">
+                <h3>{{ projet.description }}</h3>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 col-xs-6 table-responsive">
+                    <table class="table table-condensed ">
+                        <caption>Liste des membres</caption>
+                        <thead>
+                            <tr>
+                                <th>Pseudo</th><th>Nom</th><th>Prénom</th><th>E-Mail</th><th>Description</th><th>Note</th><th>&nbsp;</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for membre in projet.membres %}                            
+                            <tr>
+                                <td><a href="profil.php?id={{ membre.id }}">{{ membre.username }}</a></td>
+                                <td>{{ membre.nom }}</td>
+                                <td>{{ membre.prenom }}</td>
+                                <td>{{ membre.email }}</td>
+                                <td>{{ membre.description }}</td>
+                                <td>{{ membre.noteProjet(projet.id) }}</td>
+                                {% if session.userid is not null and membre.id != projet.createur_id and session.userid == projet.createur_id %}
+                                <form method="POST" action='projet.php'>
+                                    <input type="hidden" name="action" value="suppression_membre">
+                                    <input type="hidden" name="candidat_id" value="{{membre.pivot.id}}">
+                                    <input type="hidden" name="projet_id" value="{{projet.id}}">
+                                    <td><input type="submit" name="submit" value="enlever" class="btn btn-danger"></td>
+                                </form>
+                                {%endif%}
+                                
+                                {% if session.userid is not null and membre.id != this.id and this.isMembre(projet.id) %}
+                                <td>
+                                    <button type="button" class="btn btn-primary right" data-toggle="modal" data-target="#modalNiveau{{loop.index}}">
+                                        Evaluation du membre
+                                    </button>
+                                    <form method="POST" action='projet.php'>
+                                        <input type="hidden" name="action" value="evaluation_membre">                                                    
+                                        <input type='hidden' name='evalue_id' value='{{membre.id}}'>
+                                        <input type='hidden' name='projet_id' value='{{projet.id}}' >                                                    <div class="modal fade" id="modalNiveau{{loop.index}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                          <div class="modal-dialog">
+                                            <div class="modal-content">
+                                              <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                <h4 class="modal-title" id="myModalLabel">Noter l'utilisateur !</h4>
+                                              </div>
+                                              <div class="modal-body">
+                                                  
+                                                  <select name="niveau">
+                                                      <option {{this.noteProfilProjet(membre.id,projet.id) is null?'selected':''}}>&nbsp;</option>
+                                                      <option value="1" {{this.noteProfilProjet(membre.id,projet.id) is not null and this.noteProfilProjet(membre.id,projet.id)<1.5?'selected':''}}> 1 </option>
+                                                      <option value="2" {{this.noteProfilProjet(membre.id,projet.id) is not null and this.noteProfilProjet(membre.id,projet.id)<2.5?'selected':''}}> 2 </option>
+                                                      <option value="3" {{this.noteProfilProjet(membre.id,projet.id) is not null and this.noteProfilProjet(membre.id,projet.id)<3.5?'selected':''}}> 3 </option>
+                                                      <option value="4" {{this.noteProfilProjet(membre.id,projet.id) is not null and this.noteProfilProjet(membre.id,projet.id)<4.5?'selected':''}}> 4 </option>
+                                                      <option value="5" {{this.noteProfilProjet(membre.id,projet.id) is not null and this.noteProfilProjet(membre.id,projet.id)<5.5?'selected':''}}> 5 </option>
+                                                      <option value="6" {{this.noteProfilProjet(membre.id,projet.id) is not null and this.noteProfilProjet(membre.id,projet.id)==6?'selected':''}}> 6 </option>
+                                                  </select>
+                                              </div>
+                                              <div class="modal-footer">
+                                                <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+                                                <button type="submit" class="btn btn-primary">Enregistrer</button>
+                                              </div>
+                                            </div>
+                                          </div>{# /modal evaluation membre #}                                        
+                                    </form>{# /form evaluation membre #}
+                                </td>{# /evaluation membre #}
+                                {% endif %}
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="5">Aucun membre n'est inscrit au projet</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+            </div>
+        </div>{# /membre #}
+        <div class='row'>
+            <small>Liste des tags</small>
+            <ul class="list-group">
+            {% for tag in projet.tags %}
+                
+                <li class="list-group-item col-md-2 col-xs-6">
+                    {{tag.nom}} &nbsp;
+                    {% if session.userid == projet.createur_id %}
+                    <form method='post' action="projet.php">
+                        <input type='hidden' name='projet_id' value='{{projet.id}}'>
+                        <input type='hidden' value="{{tag.id}}" name="tag_id">
+                        <input type='hidden' value="enlever_tag" name="action">
+                        <input type='submit' value='supprimer' class='btn btn-danger'>
+                    </form>
+                    {% endif %}
+                </li>
+            {% else %}
+                <li class="list-group-item col-xs-12"><p>Il n'y a aucun tag pour ce projet{% if projet.createur_id == session.userid %}. Pour en rajouter il vous suffis de les chercher dans le formulaire ci-dessous, et de clique sur ajouter des tags{% endif %}</p></li>
+            {% endfor %}
+            </ul>
+        </div>
+        {% if session.userid == projet.createur_id %}
+        
+        <div class="row">
+            <div class="col-md-12 table-responsive">
+                    <table class="table table-condensed">
+                        <caption>Liste des candidatures</caption>
+                        <thead>
+                            <tr>
+                                <th>Pseudo</th><th>Nom</th><th>Prénom</th><th>E-Mail</th><th>Description</th><th>&nbsp;</th><th>&nbsp;</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for candidature in projet.candidats %}
+                            <tr>
+                                <td><a href="profil.php?id={{ candidature.id }}">{{ candidature.username }}</a></td>
+                                <td>{{ candidature.nom }}</td>
+                                <td>{{ candidature.prenom }}</td>
+                                <td>{{ candidature.email }}</td>
+                                <td>{{ candidature.description }}</td>
+                                
+                                <form method="POST" action='projet.php'>
+                                    <input type="hidden"     name="action"       value="validation_candidat">
+                                    <input type="hidden"     name="candidat_id"     value="{{candidature.pivot.id}}">
+                                    <td><input type="submit"     name="etat"     value="accepter"      class="btn btn-primary"></td>
+                                    <td><input type="submit"     name="etat"      value="refuser"       class="btn btn-danger"></td>
+                                </form>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="5">Aucune candidature pour le projet</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+            </div>
+        </div>{# /candidature #}
+        {%endif%}
+        {% if session.userid is not empty and projet.isMembre(session.userid) %}
+        <div class="row">
+            {# Gestions des propositions #}
+            <div class="col-md-6 col-xs-12">
+                <form method="POST" action='projet.php'>
+                    <input type="hidden"     name="action"       value="proposition">   
+                    <select name="profil_id[]" multiple   value="propositions"  class="typeahead suggestion-recherche" placeholder="rechercher un profil"></select>
+                    <input type="hidden"     name="projet_id"    value="{{projet.id}}">
+                    <input class="btn btn-primary btn-sm" type="submit"     name="submit"       value="proposer des profils dans le projet">
+                </form>
+            </div>
+            <br>
+            {% if session.userid == projet.createur_id %}
+            {# Gestions des tags #}
+            <div class='col-md-6 col-xs-12'>
+                <form method="POST" action="projet.php">                  
+                    <input type="hidden"     name="action"       value="ajout_tag"                     >   
+                    <input type='hidden' name='projet_id' value='{{projet.id}}' >
+                    <select name="tag_id[]" multiple  class="typeahead suggestion-tag" placeholder="tags à ajouter">
+                    <input class="btn btn-primary btn-sm" type="submit" value="Ajouter des tags">
+                    </select>
+                </form>
+            </div>
+            {%endif%}
+        </div>
+        {% endif %}
+        {% if session.userid == projet.createur_id %}
+        <div class="row">            
+            {# Afficher le projet #}
+            <div class="col-md-1 col-md-offset-4 col-xs-6">
+                <form method="GET" action="projet.php"> 
+                    <input type="hidden"     name="id"    value="{{projet.id}}">
+                    <input class="btn btn-default" type="submit"       value="afficher">
+                </form>
+            </div>
+            {# Gestions de la publication #}
+            <div class="col-md-1 col-xs-6">
+                <form method="POST" action='projet.php'>
+                    {% if projet.publier == "0" %}
+                        <input type="hidden"     name="action"       value="publication">   
+                        <input type="hidden"     name="projet_id"    value="{{projet.id}}">
+                        <input class="btn btn-primary" type="submit"     name="submit"       value="publier">
+                    {% elseif projet.publier == "1" %}
+                        <input type="hidden"     name="action"       value="depublication">   
+                        <input type="hidden"     name="projet_id"    value="{{projet.id}}">
+                        <input class="btn btn-primary" type="submit"     name="submit"       value="dépublier">
+                    {% endif %}
+                </form>
+            </div>
+            {# Modificaiton du projet #}
+            <div class="col-md-1 col-xs-6">
+                <form method="GET" action="projet.php">
+                    <input type="hidden"     name="projet_id"       value="{{projet.id}}">
+                    <input class="btn btn-primary" type="submit"     name="action"       value="modifier">
+                </form>
+            </div>
+            {# Suppression du projet #}
+            <div class="col-md-1 col-xs-6">
+                <form method="POST" action='projet.php'>
+                    <input type="hidden"     name="action"       value="suppression">   
+                    <input type="hidden"     name="projet_id"    value="{{projet.id}}">
+                    <input class="btn btn-danger" type="submit"     name="submit"       value="supprimer">
+                </form>
+            </div>
+        </div>
+        {%endif%}
+    </div>
