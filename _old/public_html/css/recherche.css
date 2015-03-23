@@ -1,0 +1,37 @@
+/*
+Mise en forme pour tous les élément de recherche a traver toute les pages
+*/
+/* 
+    Created on : 30 déc. 2014, 16:36:37
+    Author     : Thomas
+*/
+
+.empty-message {
+    padding: 5px 10px;
+    text-align: center;
+}
+.tt-input .bootstrap-tagsinput{
+    width:100%;
+}
+.filtre-header {
+    width:200px;
+    margin: 0 20px 5px 20px;
+    padding: 5px 0px;
+    border-bottom: 1px solid #ccc;
+}
+.tt-dropdown-menu{
+    background-color: #fff;
+    width:300px;
+    border:1px solid #bbb;
+    padding:0;
+}
+.tt-suggestion{
+    margin:0;
+    padding:0 10px;
+    margin:0;
+    cursor: pointer;
+}
+
+.tt-hint{
+    color:#bbb;
+}

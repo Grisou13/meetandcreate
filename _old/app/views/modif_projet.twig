@@ -1,0 +1,17 @@
+{# empty Twig template #}
+{% extends "template/main.twig" %}
+{%block title %}Projets{%endblock%}
+{% block contenu %}
+    <div class="jumbotron">
+        <div class="row">
+            <div class="col-md-12">
+                Titre: <input type="hidden"     name="createur_id"    value="{{data.projet.titre}}">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                Description: <input type="hidden"     name="createur_id"    value="{{data.projet.description}}">
+            </div>
+        </div>
+    </div>
+{% endblock%}

@@ -1,0 +1,29 @@
+{# empty Twig template #}
+{% extends "template/main.twig" %}
+{%block title %}Projets{%endblock%}
+{% block contenu %}
+    <div class="jumbotron">
+        <div class="row">
+            <div class="col-md-12">
+                <h1>{{ data.projet.titre }} </h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <h3>{{ data.projet.description }}</h3>
+            </div>
+        </div>
+        {% if session.userid == data.projet.createur_id %}
+            <div class="row">
+                <div class="col-md-2 col-md-offset-5">
+                    <form method="POST" >
+                        <input type="hidden"     name="action"       value="modification">   
+                        <input type="hidden"     name="projet_id"    value="{{projet.id}}">
+                        <input type="hidden"     name="createur_id"    value="{{projet.createur_id}}">
+                        <input class="btn btn-primary" type="submit"     name="submit"       value="modifier">
+                    </form>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+{% endblock%}

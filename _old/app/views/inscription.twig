@@ -1,0 +1,43 @@
+{# permet d'utiliser les templates #}
+{% extends "template/main.twig" %} 
+{%block title %}Inscription{%endblock%}
+{# Contenu #}
+{% block contenu %}
+    <style>
+        .input-group-addon
+        {
+            min-width: 200px;
+            text-align: left;
+        }
+    </style>
+<form method="post">
+    <div class="row">
+        <div class="col-xs-6 col-xs-offset-3">
+            <div class="input-group">
+                <span class="input-group-addon" id="pseudo">Votre pseudonyme</span>
+                <input type="text" name="pseudo" class="form-control" aria-describedby="pseudo"/>
+            </div>
+            <div class="input-group">
+                <span class="input-group-addon" id="email">Votre email</span>
+                <input type="text" name="email" class="form-control" aria-describedby="email"/>
+            </div>
+            <div class="input-group">
+                <span class="input-group-addon" id="password">Votre mot de passe</span>
+                <input type="password" name="password" class="form-control" aria-describedby="password"/>
+            </div>
+            <div class="input-group">
+                <span class="input-group-addon" id="password2">Confirmation mot de passe</span>
+                <input type="password" name="password2" class="form-control" aria-describedby="password2"/>
+            </div>  
+            <input class="btn btn-primary" type="submit" value="submit">
+        </div>
+    </div>
+   
+</form>
+{#     
+{% if key %}
+    {% key %}
+{% endif %}
+#}
+{% endblock %}
+

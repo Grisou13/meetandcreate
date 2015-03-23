@@ -1,0 +1,23 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 2 janv. 2015, 16:50:45
+    Author     : Thomas
+*/
+.navbar-fixed-top + .container {
+	margin-top: 70px;
+}
+#top-link-block.affix-top {
+    position: absolute; /* allows it to "slide" up into view */
+    bottom: -82px; /* negative of the offset - height of link element */
+    left: 10px; /* padding from the left side of the window */
+}
+#top-link-block.affix {
+    position: fixed; /* keeps it on the bottom once in view */
+    bottom: 18px; /* height of link element */
+    left: 10px; /* padding from the left side of the window */
+}
+.carousel-inner > .item > img { margin: 0 auto; }

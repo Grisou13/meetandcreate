@@ -1,0 +1,158 @@
+{# empty Twig template #}
+{% extends "template/main.twig" %} 
+{%block title %}Profils{%endblock%}
+{% block head %}
+    <link rel="stylesheet" href="css/recherche.css">
+    <link rel="stylesheet" href="css/bootstrap-tokenfield.min.css">
+    <link rel="stylesheet" href="css/bootstrap-tagsinput.css">
+    <link rel="stylesheet" href="css/tokenfield-typeahead.min.css">
+{%endblock%} 
+{% block contenu %}
+{# 
+Nom d'utilisateur : {% if profil.id==session.userid %}<input type="text" value="{{ profil.username }}">
+                        
+                        {%else%}
+                            <p> {{profil.username}} </p>
+                        {% endif %}
+#}
+<br>
+    
+    <div class="row">
+        <div class="col-xs-6">
+        {% if profil is not null %}
+                <form method="post" action="profil.php">
+
+                    <input type="hidden" name="id" value="{{profil.id}}">
+                    <div class="input-group">
+                        <span class="input-group-addon" id="pseudo">Votre pseudonyme</span>
+                        <input type="text" name="pseudo" class="form-control" aria-describedby="pseudo" value="{{profil.username}}" {% if session.userid != profil.id %}disabled {% endif%}/>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon" id="email">Votre email</span>
+                        <input type="text" name="email" class="form-control" aria-describedby="email" value="{{profil.email}}" {% if session.userid != profil.id %}disabled {% endif%}/>
+                    </div> 
+                    <div class="input-group">
+                        <span class="input-group-addon" id="prenom">Votre Prenom</span>
+                        <input type="text" name="prenom" class="form-control" aria-describedby="prenom" value="{{profil.prenom}}" {% if session.userid != profil.id %}disabled {% endif%}/>
+                    </div> 
+                    <div class="input-group">
+                        <span class="input-group-addon" id="nom">Votre Nom</span>
+                        <input type="text" name="nom" class="form-control" aria-describedby="nom" value="{{profil.nom}}" {% if session.userid != profil.id %}disabled {% endif%}/>
+                    </div> 
+                    <div class="input-group">
+                        <span class="input-group-addon" id="description">Description</span>
+                        <textarea class="form-control" aria-describedby="description" name="description" placeholder="description" rows="4" style="max-width: 460px; min-width: 460px; min-height: 34px;" {% if session.userid != profil.id %}disabled {% endif%}>{{profil.description}}</textarea> 
+                    </div>
+
+                    <div class="input-group">
+                        <span class="input-group-addon" id="telephone">Numéro de téléphone</span>
+                        <input type="text" name="telephone" class="form-control" aria-describedby="telephone" value="{{profil.telephone}}" {% if session.userid != profil.id %}disabled {% endif%}/>
+                    </div> 
+                    <div class="input-group">
+                        <span class="input-group-addon" id="adresse">Adresse</span>
+                        <input type="text" name="adresse" class="form-control" aria-describedby="adresse" value="{{profil.adresse}}" {% if session.userid != profil.id %}disabled {% endif%}/>
+                    </div> 
+                    <div class="input-group">
+                        <span class="input-group-addon" id="cp">Code postal</span>
+                        <input type="text" name="cp" class="form-control " aria-describedby="cp" value="{{profil.cp}}" {% if session.userid != profil.id %}disabled {% endif%}/>
+                    </div> 
+                    <div class="input-group">
+                        <span class="input-group-addon" id="pays">Pays</span>
+                        <input type="text" name="pays" class="form-control" aria-describedby="pays" value="{{profil.pays}}" {% if session.userid != profil.id %}disabled {% endif%}/>
+                    </div> 
+
+                    {% if session.userid==profil.id %}
+                        <input class="btn btn-primary btn-lg" type="submit" value="Modifier">
+                    {%endif %}
+                </form>
+                {{form|raw}} {# Afficher le formulaire ajouter/enlever favoris #}
+        </div>
+        {% if session.userid == profil.id %}
+        <div class="col-xs-6">
+            <form method='POST' action='profil.php'>
+                {% if get.recup_mdp is not null %}<input type="hidden" name="recup_mdp" value="1">{% endif %}
+                <input type='hidden' name='modification_mdp' value='1'>
+
+                     <div class="input-group">
+                            <span class="input-group-addon" id="password">Nouveau mot de passe</span>
+                            <input type="password" name="password" class="form-control" aria-describedby="password"/>
+                        </div>
+                        <div class="input-group">
+                            <span class="input-group-addon" id="password2">Confirmation mot de passe</span>
+                            <input type="password" name="password2" class="form-control" aria-describedby="password2"/>
+                        </div>  
+                     <input class="btn btn-primary btn-lg" type="submit" value="Changer mot de passe">
+                     
+            </form>
+            {# MES COMPETENCES #}
+            <br>
+            <ul class="list-group">
+                {%for comp in profil.competences%}
+                <li class="list-group-item">
+                    {{comp.competence}} &nbsp;
+                    <span class="badge">{{comp.pivot.niveau}}</span>
+                    <button type="button" class="btn btn-primary right" data-toggle="modal" data-target="#modalNiveau{{loop.index}}">
+                        Modifier niveau
+                    </button>
+                    <form method='post'>
+                        <input type='hidden' value="{{comp.id}}" name="comp_id">
+                        <input type='hidden' value="supprimer_comp" name="action">
+                        <input type='submit' value='supprimer' class='btn btn-danger'>
+                    </form>
+                    <form method="post">
+                        <input type="hidden" name="action" value="changerNiveauCompetence">
+                        <input type="hidden" name="competence_id" value="{{comp.id}}">
+                        <div class="modal fade" id="modalNiveau{{loop.index}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                          <div class="modal-dialog">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title" id="myModalLabel">Changez le niveau de votre compétence</h4>
+                              </div>
+                              <div class="modal-body">
+                                  <p> {{comp.competence}} </p>
+                                  <select name="niveau">
+                                      <option value="1" {{comp.pivot.niveau==1?'selected':''}}> Utilisateur Débutant </option>
+                                      <option value="2" {{comp.pivot.niveau==2?'selected':''}}> Utilisateur Intermédiaire </option>
+                                      <option value="3" {{comp.pivot.niveau==3?'selected':''}}> Utilisateur Confirmé </option>
+                                      <option value="4" {{comp.pivot.niveau==4?'selected':''}}> Utilisateur Avancé </option>
+                                      <option value="5" {{comp.pivot.niveau==5?'selected':''}}> Utilisateur Expert </option>
+                                  </select>
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+                                <button type="submit" class="btn btn-primary">Enregistrer</button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                    </form>
+                </li>
+                <!-- Modal -->
+                
+                {%endfor%}
+            </ul>
+            <form method="POST" >
+				<input class="btn btn-primary btn-lg" type="submit" value="Ajouter une compétence">
+			   <input type="hidden"     name="action"       value="ajout_competence"                     >   
+			   <select name="competence_id[]" multiple   value="propositions"  class="typeahead suggestion-competence" placeholder="Recherche compétence">
+			   </select>
+			  </form>
+ 
+           
+
+        </div> 
+        {% endif %}
+        {% else %}
+            <p>Le profil que vous avez demandé à visionné ne peut pas être vu, ou n'existe pas</p>
+        {% endif %}
+        </div>           
+        <br>
+
+    <script src="js/tagsinput.min.js" ></script>
+    <script src="js/handlebars.js"></script>
+    <script src="js/typeahead.js"></script>
+    <script src="js/profil.js"></script>
+{% endblock %}
+
+
