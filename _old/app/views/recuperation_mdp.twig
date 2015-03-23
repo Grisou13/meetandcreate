@@ -1,0 +1,17 @@
+{# empty Twig template #}
+{% extends "template/main.twig" %}
+{%block title %}Récuperation de mot de passe{%endblock%}
+{% block contenu %}
+<form method="post">
+    <div class="row">
+        <div class="col-xs-6 col-xs-offset-3">
+            <div class="input-group">
+                <span class="input-group-addon" id="email_recup">Votre email</span>
+                <input type="text" name="email_recup" class="form-control" aria-describedby="email_recup"/>
+            </div>
+            <input class="btn btn-primary" type="submit" value="Recevoir un nouveau mot de passe provisoire">
+        </div>
+    </div>
+   
+</form>   
+{% endblock %}
